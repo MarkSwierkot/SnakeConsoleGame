@@ -59,10 +59,7 @@ namespace Snake
         {
             this.posX++;
         }
-        public void ShowSnakePosition()
-        {
-            Console.WriteLine("X: " + posX + " Y: " + posY);
-        }
+     
 
     }
 }

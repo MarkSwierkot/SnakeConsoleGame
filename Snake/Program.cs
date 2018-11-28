@@ -9,77 +9,86 @@ namespace Snake
 {
     class Program
     {
+        
         public static int GAME_SIZE = 17;
-        public static int TIMER = 750;
+        public static int TIMER =500;
+        public static int RESULT = 1;
+
+       
 
         static void Main(string[] args)
         {
-            Console.CursorVisible = false;
-
+            // Array defines two dimensional array, used in the program as a board for Snake
             int[,] Array = new int[GAME_SIZE, GAME_SIZE];
 
+            // Predator, is a List of Snake type, which stores snake parts, starting from its head
             List<Snake> Predator = new List<Snake>();
-
+           
             Snake head = new Snake((GAME_SIZE-1)/2, (GAME_SIZE - 1) / 2);
             Food apple = new Food();
             Random ranodmiser = new Random();
 
+            DateTime time1 = DateTime.Now;
+            DateTime time2 = DateTime.Now;
 
-            Predator.Add(head);
-  
-            Array[Predator[0].posX, Predator[0].posY] = 1;
+            bool ButtonPressed = false;
+            bool Eaten = true;
+           
+            //Populate list with first element - head - snake at the beggining must have at least head
+            Predator.Add(head); 
+            Array[Predator[0].returnSnakeX(), Predator[0].returnSnakeX()] = 1;
     
        
             string direction = "LEFT";
-            DateTime time1 = DateTime.Now;
-            DateTime time2 = DateTime.Now;
-            string buttonpressed = "no";
 
-            bool eaten = true;
-
+          
      
             while (true)
             {
-
+ 
                 time1 = DateTime.Now;
-                buttonpressed = "no";
+                ButtonPressed = false;
 
-                if(eaten)
+
+                //If boolean variable Eaten is set to true, which means that snake's head has met with apple object, generate new random x and y, 
+                // change Apple Position and set again Eaten to false
+                if(Eaten)
                 {
                     int x = ranodmiser.Next(0, GAME_SIZE);
                     int y = ranodmiser.Next(0, GAME_SIZE);
 
                     apple.UpdateSnakePosition(x, y);
-                    eaten = false;
+                    Eaten = false;
                 }
 
                 while (true)
                 {
                     time2 = DateTime.Now;
-                    if (time2.Subtract(time1).TotalMilliseconds > 190) { break; }
+
+                    if (time2.Subtract(time1).TotalMilliseconds > TIMER) { break; }
                     if(Console.KeyAvailable)
                     {
                         ConsoleKeyInfo input = Console.ReadKey(true);
 
-                        if(input.Key.Equals(ConsoleKey.UpArrow) && direction != "DOWN" && buttonpressed == "no")
+                        if(input.Key.Equals(ConsoleKey.UpArrow) && direction != "DOWN" && ButtonPressed == false)
                         {
                             direction = "UP";
-                            buttonpressed = "yes";
+                            ButtonPressed = true;
                         }
-                        if (input.Key.Equals(ConsoleKey.DownArrow) && direction != "UP" && buttonpressed == "no")
+                        if (input.Key.Equals(ConsoleKey.DownArrow) && direction != "UP" && ButtonPressed == false)
                         {
                             direction = "DOWN";
-                            buttonpressed = "yes";
+                            ButtonPressed = true;
                         }
-                        if (input.Key.Equals(ConsoleKey.LeftArrow) && direction != "RIGHT" && buttonpressed == "no")
+                        if (input.Key.Equals(ConsoleKey.LeftArrow) && direction != "RIGHT" && ButtonPressed == false)
                         {
                             direction = "LEFT";
-                            buttonpressed = "yes";
+                            ButtonPressed = true;
                         }
-                         if (input.Key.Equals(ConsoleKey.RightArrow) && direction != "LEFT" && buttonpressed == "no")
+                         if (input.Key.Equals(ConsoleKey.RightArrow) && direction != "LEFT" && ButtonPressed == false)
                         {
                             direction = "RIGHT";
-                            buttonpressed = "yes";
+                            ButtonPressed = true;
                         }
 
                     }
@@ -88,44 +97,44 @@ namespace Snake
 
                 int targetY, targetX;
 
-
-                switch (direction)
+                try
+                {
+                    switch (direction)
                 {
                   
                     case "LEFT":
                         {
+                            
+                                zeroArray(Array);
 
-                            zeroArray(Array);
+                                Array[apple.posX, apple.posY] = 1;
 
-                            Array[apple.posX, apple.posY] = 1;
-
-                            if (Predator.Count == 1)
-                            {
-                                Predator[0].moveLeft();
-                                Array[Predator[0].returnSnakeX(), Predator[0].returnSnakeY()] = 1;
-                            }
-                            else
-                            {
-                                Predator.RemoveAt(Predator.Count - 1);
-                                Array[Predator[Predator.Count - 1].posX, Predator[Predator.Count - 1].posY] = 0;
-
-                                targetX = Predator.First().posX;
-                                targetY = Predator.First().posY;
-
-
-                                Snake snake = new Snake(targetX - 1, targetY);
-                                Predator.Insert(0, snake);
-
-
-                                foreach (Snake part in Predator)
+                                if (Predator.Count == 1)
                                 {
-                                    Array[part.posX, part.posY] = 1;
+                                    Predator[0].moveLeft();
+                                    Array[Predator[0].posX, Predator[0].posY] = 1;
                                 }
+                                else
+                                {
+                                    Predator.RemoveAt(Predator.Count - 1);
+                                    Array[Predator[Predator.Count - 1].posX, Predator[Predator.Count - 1].posY] = 0;
 
-                            }
+                                    targetX = Predator.First().posX;
+                                    targetY = Predator.First().posY;
 
 
-                           
+                                    Snake snake = new Snake(targetX - 1, targetY);
+                                    Predator.Insert(0, snake);
+
+
+                                    foreach (Snake part in Predator)
+                                    {
+                                        Array[part.posX, part.posY] = 1;
+                                    }
+
+                                }
+                            
+                          
                             break;
                         }
                      case "UP":
@@ -135,7 +144,7 @@ namespace Snake
                             if (Predator.Count == 1)
                             {
                                 Predator[0].moveUp();
-                                Array[Predator[0].returnSnakeX(), Predator[0].returnSnakeY()] = 1;
+                                Array[Predator[0].posX, Predator[0].posY]= 1;
                             }
                             else
                             {
@@ -160,11 +169,12 @@ namespace Snake
                         }
                     case "RIGHT":
                         {
-                            zeroArray(Array); Array[apple.posX, apple.posY] = 1;
+                            zeroArray(Array);
+                            Array[apple.posX, apple.posY] = 1;
                             if (Predator.Count == 1)
                             {
                                 Predator[0].moveRight();
-                                Array[Predator[0].returnSnakeX(), Predator[0].returnSnakeY()] = 1;
+                                Array[Predator[0].posX, Predator[0].posY] = 1;
                             }
                             else
                             {
@@ -193,7 +203,7 @@ namespace Snake
                             if (Predator.Count == 1)
                             {
                                 Predator[0].moveDown();
-                                Array[Predator[0].returnSnakeX(), Predator[0].returnSnakeY()] = 1;
+                                Array[Predator[0].posX, Predator[0].posY] = 1;
                             }
                             else
                             {
@@ -221,8 +231,12 @@ namespace Snake
                    
                 }
 
+                }
+                catch (Exception ex)
+                {
+                    Console.Write("GAME OVER");
+                }
 
-               
                 updateArray(Array);
 
 
@@ -232,29 +246,34 @@ namespace Snake
                 if (apple.posX == Predator.First().posX && apple.posY == Predator.First().posY) 
                 {
                     Snake eatenApple = new Snake();
-
+                    RESULT++;
                     eatenApple.setX(apple.posX);
                     eatenApple.setY(apple.posY);
 
                     Predator.Insert(0, eatenApple);
                     Array[apple.posX, apple.posY] = 0;
-                    eaten = true;
+                    Eaten = true;
                 }
               
                 
                 Thread.Sleep(TIMER);   
             }
 
-            Console.ReadKey();
+         
         }
         public static void updateArray(int[,] array)
         {
+            Console.SetCursorPosition(0, 0);
+            Console.CursorVisible = false;
+            Console.WriteLine("RESULT: " + RESULT);
+
             for (int i = 0; i < GAME_SIZE ; i++)
             {
+               
                 for (int j = 0; j < GAME_SIZE; j++)
                 {
                     
-                    if(array[j,i] == 0)
+                    if (array[j,i] == 0)
                     {
                         Console.Write("   ");
                     }
@@ -267,17 +286,18 @@ namespace Snake
                 }
                 Console.WriteLine();
                 Console.WriteLine();
+              
             }
 
         }
 
 
 
-        // This method draws ins
-
+     
 
         public static void zeroArray(int[,] array)
         {
+            
             for (int i = 0; i < GAME_SIZE; i++)
             {
                 for (int j = 0; j < GAME_SIZE; j++)
@@ -291,10 +311,6 @@ namespace Snake
 
 
 
-        public static void InsertInArray(int[,] array, int posX, int posY)
-        {
-
-        }
-
+   
     }
 }

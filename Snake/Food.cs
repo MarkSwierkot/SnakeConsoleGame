@@ -8,8 +8,8 @@ namespace Snake
 {
     public class Food  
     {
-        public int posX;
-        public int posY;
+         private int posX;
+         private int posY;
 
          public Food()
         {
@@ -21,19 +21,28 @@ namespace Snake
             this.posX = x;
             this.posY = y;
         }
-        public void setX(int x)
+        public int GetPosX()
         {
-            this.posX = x;
+            return posX;
         }
-        public void setY(int y)
+        public int GetPosY()
         {
-            this.posY = y;
+            return posY;
         }
+        public void SetPosY(int PosY)
+        {
+            posY = PosY;
+        }
+        public void SetPosX(int PosX)
+        {
+            posX = PosX;
+        }
+
         public void ShowSnakePosition()
         {
             Console.WriteLine("X: " + posX + " Y: " + posY);
         }
-        public void UpdateSnakePosition(int x, int y)
+        public void UpdatePosition(int x, int y)
         {
             this.posX = x;
             this.posY = y;

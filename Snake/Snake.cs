@@ -8,54 +8,56 @@ namespace Snake
 {
     public class Snake
     {
-        public int posX;
-        public int posY;
+        private int posX;
+        private int posY;
 
+        public int GetPosX()
+        {
+            return posX;
+        }
+        public void SetPosX(int PosX)
+        {
+            posX = PosX;
+        }
+        public int GetPosY()
+        {
+            return posY;
+        }
+        public void SetPosY(int PosY)
+        {
+            posY = PosY;
+        }
+
+  
         public Snake()
         {
-            int posX = 0;
-            int posY = 0;
+            posX = 0;
+            posY = 0;
         }
         public Snake(int x, int y)
         {
             this.posX = x;
             this.posY = y;
         }
-        public int returnSnakeX()
-        {
-            return posX;
-        }
-        public int returnSnakeY()
-        {
-            return posY;
-        }
-       public void setX(int x)
-        {
-            this.posX = x;
-        }
-        public void setY(int y)
-        {
-            this.posY = y;
-        }
-        public void UpdateSnakePosition(int x, int y)
+        public void UpdatePosition(int x, int y)
         {
             this.posX = x;
             this.posY = y;
         }
 
-        public void moveUp()
+        public void MoveUp()
         {
             this.posY--;
         }
-        public void moveDown()
+        public void MoveDown()
         {
             this.posY++;
         }
-        public void moveLeft()
+        public void MoveLeft()
         {
             this.posX--;
         }
-        public void moveRight()
+        public void MoveRight()
         {
             this.posX++;
         }
